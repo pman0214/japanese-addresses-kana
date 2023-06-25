@@ -51,18 +51,26 @@ df_pref = df[[
 ]].drop_duplicates().set_index('都道府県コード')
 
 # 都道府県 - 市町村エンドポイント
-cities = df.groupby('都道府県コード').apply(lambda x:
+prefs = df.groupby('都道府県コード').apply(lambda x:
     x.sort_values('市区町村コード')['市区町村名'].unique().tolist())
-cities = df_pref.join(pd.DataFrame(cities)).set_index('都道府県名')
-cities = pd.Series(cities[0])
+prefs = df_pref.join(pd.DataFrame(prefs)).set_index('都道府県名')
 with open(OUTDIR + CITIES_PATH, 'w', encoding='utf-8') as f:
     json.dump(
-        cities.to_dict(),
+        pd.Series(prefs[0]).to_dict(),
         f,
         ensure_ascii=False,
     )
 
-# # 町丁目エンドポイント
-# for pref in cities.keys():
-#     for city in cities[pref]:
-#         pass
+# 町丁目エンドポイント
+cols = {
+    '大字町丁目名': 'town',
+    '大字町丁目名カナ': 'town_kana',
+    '小字・通称名': 'koaza',
+    '緯度': 'lat',
+    '経度': 'lng',
+}
+def city_jsonify(x):
+    ret = x[list(cols.keys())].rename(columns=cols)
+    return ret
+
+df.groupby(['都道府県コード', '市区町村コード'], group_keys=True).apply(city_jsonify)
