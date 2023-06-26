@@ -26,7 +26,6 @@ import pandas as pd
 import os
 import shutil
 import json
-import urllib.parse
 
 # ======================================================================
 ORIG_DATA_PATH = 'https://github.com/geolonia/japanese-addresses/raw/develop/data/latest.csv'
