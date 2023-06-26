@@ -30,9 +30,6 @@ import urllib.parse
 
 # ======================================================================
 ORIG_DATA_PATH = 'https://github.com/geolonia/japanese-addresses/raw/develop/data/latest.csv'
-# ### for debug
-ORIG_DATA_PATH = 'latest.csv'
-
 OUTDIR = 'public/api/'
 API_PATH = 'ja/'
 CITIES_PATH = 'ja.json'
