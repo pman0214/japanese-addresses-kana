@@ -39,7 +39,8 @@ CITIES_PATH = 'ja.json'
 
 # ======================================================================
 # 出力先のクリア
-shutil.rmtree(OUTDIR)
+if os.path.exists(OUTDIR):
+    shutil.rmtree(OUTDIR)
 os.makedirs(OUTDIR)
 
 # データ読み込み
