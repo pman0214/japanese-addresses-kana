@@ -2,9 +2,9 @@
 name: Deploy API json files
 
 on:
-  # Runs on 5th every month at 0:20am
+  # Runs on 19th every month at 0:20am
   schedule:
-    - cron: 20 0 5 * *
+    - cron: 20 0 19 * *
   # Runs on push to main branch
   push:
     branches: ["master"]

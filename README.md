@@ -12,8 +12,8 @@ Python3を使っています。
 
 ## API
 
-pman0214住所データが提供しているAPIに「かな」を付けたデータを提供しています。
-元のデータでかなが欠損している場合には、かなは空となっています。
+Geolonia住所データが提供しているAPIに「かな」を付けたデータを提供しています。
+元のデータでかなが欠損している場合には、かなは空文字列となっています。
 
 #### 都道府県 - 市町村エンドポイント
 
@@ -83,6 +83,21 @@ https://pman0214.github.io/japanese-addresses-kana/api/ja/<都道府県名>/<市
   },
   ...
 ```
+
+## Deployment
+
+APIのJSONファイルはGitHub ActionsでGitHub Pagesにデプロイしています。
+GitHub Pagesのトップには`public/index.html`を配置しています。
+
+月1回の実行、または`master`ブランチへのpushでデプロイが実行されます。
+
+詳細は`.github/workflows/static.yml`を参照してください。
+
+## Contribute
+
+バグに関するPull Requestはwelcomeです。
+なお、オリジナルデータのバグに関しては修正しません。
+[Geolonia 住所データ](https://github.com/geolonia/japanese-addresses/)でバグ報告してください。
 
 ## License
 
