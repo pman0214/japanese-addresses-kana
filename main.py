@@ -25,6 +25,7 @@ import numpy as np
 import pandas as pd
 import os
 import json
+import urllib.parse
 
 # ======================================================================
 #ORIG_DATA_PATH = 'https://github.com/geolonia/japanese-addresses/raw/develop/data/latest.csv'
@@ -35,7 +36,8 @@ OUTDIR = 'public/api/ja/'
 CITIES_PATH = 'ja.json'
 
 # ======================================================================
-# 出力先の作成
+# 出力先のクリア
+#os.rmtree(OUTDIR)
 if not os.path.exists(OUTDIR):
     os.makedirs(OUTDIR)
 
@@ -44,16 +46,32 @@ df = pd.read_csv(
     ORIG_DATA_PATH,
     encoding='utf-8',
 )
+# 大字、小字が空のときは空文字列にする
+df.loc[pd.isna(df['大字町丁目名']), '大字町丁目名'] = ''
+df.loc[pd.isna(df['大字町丁目名カナ']), '大字町丁目名カナ'] = ''
+df.loc[pd.isna(df['小字・通称名']), '小字・通称名'] = ''
 
-df_pref = df[[
+df_cities = df[[
+    '都道府県コード',
+    '都道府県名',
+    '市区町村コード',
+    '市区町村名',
+]].drop_duplicates().set_index('市区町村コード')
+
+df_pref = df_cities[[
     '都道府県コード',
     '都道府県名',
 ]].drop_duplicates().set_index('都道府県コード')
 
+#--------------------------------------------------
 # 都道府県 - 市町村エンドポイント
+
 prefs = df.groupby('都道府県コード').apply(lambda x:
     x.sort_values('市区町村コード')['市区町村名'].unique().tolist())
+# 都道府県名を連結
 prefs = df_pref.join(pd.DataFrame(prefs)).set_index('都道府県名')
+
+# 書き出し
 with open(OUTDIR + CITIES_PATH, 'w', encoding='utf-8') as f:
     json.dump(
         pd.Series(prefs[0]).to_dict(),
@@ -61,7 +79,9 @@ with open(OUTDIR + CITIES_PATH, 'w', encoding='utf-8') as f:
         ensure_ascii=False,
     )
 
+#--------------------------------------------------
 # 町丁目エンドポイント
+
 cols = {
     '大字町丁目名': 'town',
     '大字町丁目名カナ': 'town_kana',
@@ -69,8 +89,21 @@ cols = {
     '緯度': 'lat',
     '経度': 'lng',
 }
-def city_jsonify(x):
-    ret = x[list(cols.keys())].rename(columns=cols)
-    return ret
+towns = df.groupby(['都道府県コード', '市区町村コード'], group_keys=True).apply(lambda x:
+    x[list(cols.keys())].rename(columns=cols).to_dict('records')
+)
+# 都道府県名、市区町村名を連結
+towns = df_cities.join(pd.DataFrame(towns))
 
-df.groupby(['都道府県コード', '市区町村コード'], group_keys=True).apply(city_jsonify)
+# 書き出し
+for k, v in towns.set_index(['都道府県名', '市区町村名'])[0].to_dict().items():
+    outpath = OUTDIR + urllib.parse.quote(k[0], encoding='utf-8')
+    outfile = urllib.parse.quote(k[1], encoding='utf-8') + '.json'
+    if not os.path.exists(outpath):
+        os.makedirs(outpath)
+    with open(outpath + '/' + outfile, 'w') as f:
+        json.dump(
+            v,
+            f,
+            ensure_ascii=False,
+        )
