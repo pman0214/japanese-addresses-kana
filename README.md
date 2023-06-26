@@ -1,6 +1,6 @@
 # かな付き住所データAPI
 
-[Geolonia 住所データ](https://github.com/geolonia/japanese-addresses/)のデータを読み込んでな付きAPIを提供します。
+[Geolonia 住所データ](https://github.com/geolonia/japanese-addresses/)のデータを読み込んで、かな付きAPIを提供します。
 
 ## Requirements
 
