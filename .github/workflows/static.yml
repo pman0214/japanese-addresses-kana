@@ -5,6 +5,9 @@ on:
   # Runs on 5th every month at 0:20am
   schedule:
     - cron: 20 0 5 * *
+  # Runs on push to main branch
+  push:
+    branches: ["master"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

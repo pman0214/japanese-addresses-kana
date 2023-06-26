@@ -31,7 +31,7 @@ import urllib.parse
 # ======================================================================
 ORIG_DATA_PATH = 'https://github.com/geolonia/japanese-addresses/raw/develop/data/latest.csv'
 # ### for debug
-# ORIG_DATA_PATH = 'latest.csv'
+ORIG_DATA_PATH = 'latest.csv'
 
 OUTDIR = 'public/api/'
 API_PATH = 'ja/'
@@ -79,6 +79,7 @@ with open(OUTDIR + CITIES_PATH, 'w', encoding='utf-8') as f:
         pd.Series(prefs[0]).to_dict(),
         f,
         ensure_ascii=False,
+        separators=(',', ':'),
     )
 
 #--------------------------------------------------
@@ -99,8 +100,8 @@ towns = df_cities.join(pd.DataFrame(towns))
 
 # 書き出し
 for k, v in towns.set_index(['都道府県名', '市区町村名'])[0].to_dict().items():
-    outpath = OUTDIR + API_PATH + urllib.parse.quote(k[0], encoding='utf-8')
-    outfile = urllib.parse.quote(k[1], encoding='utf-8') + '.json'
+    outpath = OUTDIR + API_PATH + k[0]
+    outfile = k[1] + '.json'
     if not os.path.exists(outpath):
         os.makedirs(outpath)
     with open(outpath + '/' + outfile, 'w') as f:
@@ -108,4 +109,5 @@ for k, v in towns.set_index(['都道府県名', '市区町村名'])[0].to_dict()
             v,
             f,
             ensure_ascii=False,
+            separators=(',', ':'),
         )
