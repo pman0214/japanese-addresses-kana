@@ -24,6 +24,7 @@
 import numpy as np
 import pandas as pd
 import os
+import shutil
 import json
 import urllib.parse
 
@@ -32,11 +33,13 @@ ORIG_DATA_PATH = 'https://github.com/geolonia/japanese-addresses/raw/develop/dat
 # ### for debug
 # ORIG_DATA_PATH = 'latest.csv'
 
-OUTDIR = 'public/api/ja/'
+OUTDIR = 'public/api/'
+API_PATH = 'ja/'
 CITIES_PATH = 'ja.json'
 
 # ======================================================================
 # 出力先のクリア
+shutil.rmtree(OUTDIR)
 os.makedirs(OUTDIR)
 
 # データ読み込み
@@ -95,7 +98,7 @@ towns = df_cities.join(pd.DataFrame(towns))
 
 # 書き出し
 for k, v in towns.set_index(['都道府県名', '市区町村名'])[0].to_dict().items():
-    outpath = OUTDIR + urllib.parse.quote(k[0], encoding='utf-8')
+    outpath = OUTDIR + API_PATH + urllib.parse.quote(k[0], encoding='utf-8')
     outfile = urllib.parse.quote(k[1], encoding='utf-8') + '.json'
     if not os.path.exists(outpath):
         os.makedirs(outpath)
