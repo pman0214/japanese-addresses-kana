@@ -28,18 +28,17 @@ import json
 import urllib.parse
 
 # ======================================================================
-#ORIG_DATA_PATH = 'https://github.com/geolonia/japanese-addresses/raw/develop/data/latest.csv'
-### for debug
-ORIG_DATA_PATH = 'latest.csv'
+ORIG_DATA_PATH = 'https://github.com/geolonia/japanese-addresses/raw/develop/data/latest.csv'
+# ### for debug
+# ORIG_DATA_PATH = 'latest.csv'
 
 OUTDIR = 'public/api/ja/'
 CITIES_PATH = 'ja.json'
 
 # ======================================================================
 # 出力先のクリア
-#os.rmtree(OUTDIR)
-if not os.path.exists(OUTDIR):
-    os.makedirs(OUTDIR)
+os.rmtree(OUTDIR)
+os.makedirs(OUTDIR)
 
 # データ読み込み
 df = pd.read_csv(
