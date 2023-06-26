@@ -55,34 +55,31 @@ https://pman0214.github.io/japanese-addresses-kana/api/ja/<都道府県名>/<市
 
 ※ 都道府県名及び市区町村名は URL エンコードを行ってください。
 
-例: [https://pman0214.github.io/japanese-addresses-kana/api/ja/%E5%8C%97%E6%B5%B7%E9%81%93/%E5%87%BD%E9%A4%A8%E5%B8%82.json](https://pman0214.github.io/japanese-addresses-kana/api/ja/%E5%8C%97%E6%B5%B7%E9%81%93/%E5%87%BD%E9%A4%A8%E5%B8%82.json)
+例: [https://pman0214.github.io/japanese-addresses-kana/api/ja/%E9%95%B7%E9%87%8E%E7%9C%8C/%E9%95%B7%E9%87%8E%E5%B8%82.json](https://pman0214.github.io/japanese-addresses-kana/api/ja/%E9%95%B7%E9%87%8E%E7%9C%8C/%E9%95%B7%E9%87%8E%E5%B8%82.json)
 
 ```
 [
   ...
   {
-    "town": "篠ノ井塩崎",
-    "koaza": "四之宮",
-    "lat": 36.555444,
-    "lng": 138.10524
+    "town":"篠ノ井塩崎",
+    "town_kana":"シノノイシオザキ",
+    "koaza":"四之宮",
+    "lat":36.555444,
+    "lng":138.10524
   },
   {
-    "town": "篠ノ井塩崎",
-    "koaza": "越",
-    "lat": 36.544766,
-    "lng": 138.104657
+    "town":"篠ノ井塩崎",
+    "town_kana":"シノノイシオザキ",
+    "koaza":"山崎",
+    "lat":36.557487,
+    "lng":138.118548
   },
   {
-    "town": "篠ノ井塩崎",
-    "koaza": "長谷",
-    "lat": 36.548163,
-    "lng": 138.101997
-  },
-  {
-    "town": "篠ノ井塩崎",
-    "koaza": "明戸",
-    "lat": 36.549686,
-    "lng": 138.106612
+    "town":"篠ノ井塩崎",
+    "town_kana":"シノノイシオザキ",
+    "koaza":"平久保",
+    "lat":36.560294,
+    "lng":138.12407
   },
   ...
 ```
