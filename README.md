@@ -47,6 +47,52 @@ https://pman0214.github.io/japanese-addresses-kana/api/ja.json
   ],
 ```
 
+#### 都道府県 - 市町村オブジェクトエンドポイント
+
+```
+https://pman0214.github.io/japanese-addresses-kana/api/ja-obj.json
+```
+
+例: [https://pman0214.github.io/japanese-addresses-kana/api/ja-obj.json](https://pman0214.github.io/japanese-addresses-kana/api/ja-obj.json)
+
+```
+{
+    "北海道": [
+        {
+            "city": "札幌市中央区",
+            "city_kana": "サッポロシチュウオウク"
+        },
+        {
+            "city": "札幌市北区",
+            "city_kana": "サッポロシキタク"
+        },
+        ...
+    ],
+    "青森県": [
+        {
+            "city": "青森市",
+            "city_kana": "アオモリシ"
+        },
+        {
+            "city": "弘前市",
+            "city_kana": "ヒロサキシ"
+        },
+        ...
+    ],
+    "岩手県": [
+        {
+            "city": "盛岡市",
+            "city_kana": "モリオカシ"
+        },
+        {
+            "city": "宮古市",
+            "city_kana": "ミヤコシ"
+        },
+        ...
+    ],
+    ...
+```
+
 #### 町丁目エンドポイント
 
 ```
