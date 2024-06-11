@@ -29,8 +29,8 @@ import json
 
 # ======================================================================
 ORIG_DATA_PATH = 'https://github.com/geolonia/japanese-addresses/raw/develop/data/latest.csv'
-OUTDIR = 'public/api/'
-API_PATH = 'ja/'
+OUTDIR = 'public/api'
+API_PATH = 'ja'
 CITIES_PATH = 'ja.json'
 CITIES_OBJ_PATH = 'ja-obj.json'
 
@@ -82,7 +82,7 @@ json_str = json.dumps(
     ensure_ascii=False,
     separators=(',', ':'),
 )
-with open(f'{OUTDIR}{CITIES_PATH}', 'w', encoding='utf-8') as f:
+with open(f'{OUTDIR}/{CITIES_PATH}', 'w', encoding='utf-8') as f:
     f.write(json_str)
 
 #--------------------------------------------------
@@ -105,7 +105,7 @@ json_str = json.dumps(
     ensure_ascii=False,
     separators=(',', ':'),
 )
-with open(f'{OUTDIR}{CITIES_OBJ_PATH}', 'w', encoding='utf-8') as f:
+with open(f'{OUTDIR}/{CITIES_OBJ_PATH}', 'w', encoding='utf-8') as f:
     f.write(json_str)
 
 #--------------------------------------------------
@@ -150,8 +150,8 @@ class NanEncoder(json.JSONEncoder):
         return obj
 ## 各行が市区町村なので、1行を1つのファイルに書き出す関数
 def write_town(row):
-    outpath = f'{OUTDIR}{API_PATH}{row['都道府県名']}'
-    outfile = f'{row['市区町村名']}.json'
+    outpath = f'{OUTDIR}/{API_PATH}/{row["都道府県名"]}'
+    outfile = f'{row["市区町村名"]}.json'
     if not os.path.exists(outpath):
         os.makedirs(outpath)
     # なぜかjson.dumpではjson encoderでnp.nanをnullにしてくれないので
