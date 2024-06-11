@@ -50,6 +50,9 @@ df.loc[pd.isna(df['大字町丁目名']), '大字町丁目名'] = ''
 df.loc[pd.isna(df['大字町丁目名カナ']), '大字町丁目名カナ'] = ''
 df.loc[pd.isna(df['小字・通称名']), '小字・通称名'] = ''
 
+# 欠損値はNoneにする
+df.where(df.notnull(), None)
+
 df_cities = df[[
     '都道府県コード',
     '都道府県名',
@@ -126,6 +129,26 @@ towns = df.rename(columns=cols).groupby(
 towns = df_cities.join(towns.rename('towns'))
 
 # 書き出し
+## NaNをnullに
+import math
+class NanEncoder(json.JSONEncoder):
+    def encode(self, obj, *args, **kwargs):
+        return super().encode(NanEncoder.nan2nullstr(obj), *args, **kwargs)
+
+    def nan2nullstr(obj):
+        if obj is None:
+            return None
+        if isinstance(obj, dict):
+            return {k: NanEncoder.nan2nullstr(v) for k,v in obj.items()}
+        if isinstance(obj, (list, tuple)):
+            return [NanEncoder.nan2nullstr(v) for v in obj]
+        if isinstance(obj, float):
+            if math.isnan(obj):
+                return None
+            elif math.isinf(obj):
+                return 'inf' if obj > 0 else '-inf'
+        return obj
+
 for k, v in towns.set_index(['都道府県名', '市区町村名'])['towns'].to_dict().items():
     outpath = OUTDIR + API_PATH + k[0]
     outfile = k[1] + '.json'
@@ -137,4 +160,5 @@ for k, v in towns.set_index(['都道府県名', '市区町村名'])['towns'].to_
             f,
             ensure_ascii=False,
             separators=(',', ':'),
+            cls=NanEncoder,
         )
