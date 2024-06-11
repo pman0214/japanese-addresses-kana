@@ -77,13 +77,13 @@ prefs = df_cities.groupby('都道府県コード').apply(
 prefs = df_pref.join(prefs.rename('cities')).set_index('都道府県名')
 
 # 書き出し
-with open(OUTDIR + CITIES_PATH, 'w', encoding='utf-8') as f:
-    json.dump(
-        pd.Series(prefs['cities']).to_dict(),
-        f,
-        ensure_ascii=False,
-        separators=(',', ':'),
-    )
+json_str = json.dumps(
+    prefs['cities'].to_dict(),
+    ensure_ascii=False,
+    separators=(',', ':'),
+)
+with open(f'{OUTDIR}{CITIES_PATH}', 'w', encoding='utf-8') as f:
+    f.write(json_str)
 
 #--------------------------------------------------
 # 都道府県 - 市町村オブジェクトエンドポイント
@@ -100,13 +100,13 @@ prefs = prefs.groupby('都道府県コード').apply(lambda x: x.to_dict(orient=
 prefs = df_pref.join(prefs.rename('cities')).set_index('都道府県名')
 
 # 書き出し
-with open(OUTDIR + CITIES_OBJ_PATH, 'w', encoding='utf-8') as f:
-    json.dump(
-        pd.Series(prefs['cities']).to_dict(),
-        f,
-        ensure_ascii=False,
-        separators=(',', ':'),
-    )
+json_str = json.dumps(
+    prefs['cities'].to_dict(),
+    ensure_ascii=False,
+    separators=(',', ':'),
+)
+with open(f'{OUTDIR}{CITIES_OBJ_PATH}', 'w', encoding='utf-8') as f:
+    f.write(json_str)
 
 #--------------------------------------------------
 # 町丁目エンドポイント
@@ -129,7 +129,7 @@ towns = df.rename(columns=cols).groupby(
 towns = df_cities.join(towns.rename('towns'))
 
 # 書き出し
-## NaNをnullに
+## NaNをnullにするjson encoder
 import math
 class NanEncoder(json.JSONEncoder):
     def encode(self, obj, *args, **kwargs):
@@ -148,17 +148,21 @@ class NanEncoder(json.JSONEncoder):
             elif math.isinf(obj):
                 return 'inf' if obj > 0 else '-inf'
         return obj
-
-for k, v in towns.set_index(['都道府県名', '市区町村名'])['towns'].to_dict().items():
-    outpath = OUTDIR + API_PATH + k[0]
-    outfile = k[1] + '.json'
+## 各行が市区町村なので、1行を1つのファイルに書き出す関数
+def write_town(row):
+    outpath = f'{OUTDIR}{API_PATH}{row['都道府県名']}'
+    outfile = f'{row['市区町村名']}.json'
     if not os.path.exists(outpath):
         os.makedirs(outpath)
-    with open(outpath + '/' + outfile, 'w') as f:
-        json.dump(
-            v,
-            f,
-            ensure_ascii=False,
-            separators=(',', ':'),
-            cls=NanEncoder,
-        )
+    # なぜかjson.dumpではjson encoderでnp.nanをnullにしてくれないので
+    # json.dumpsを使う
+    json_str = json.dumps(
+        row['towns'],
+        ensure_ascii=False,
+        separators=(',', ':'),
+        cls=NanEncoder,
+    )
+    with open(f'{outpath}/{outfile}', 'w', encoding='utf-8') as f:
+        f.write(json_str)
+
+towns.apply(write_town, axis=1)
